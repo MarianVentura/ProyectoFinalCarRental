@@ -1,0 +1,206 @@
+﻿@page "/editar-vehiculo/{id:int}"
+@inject VehiculosService VehiculosService
+@inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+
+@rendermode InteractiveServer
+@attribute [Authorize(Roles = "admin")]
+
+<EditForm Model="vehiculoEditado" OnSubmit="GuardarVehiculo" FormName="EditarVehiculo">
+    <DataAnnotationsValidator />
+
+    <div class="container mt-5 pt-5">
+        <div class="card shadow-lg">
+            <!-- Header -->
+            <div class="card-header" style="background-color: #1C3144; color: white;">
+                <h2 class="mb-0" style="font-family: 'Poppins', sans-serif;"><strong>Editar Vehículo</strong></h2>
+            </div>
+
+            <!-- Body -->
+            <div class="card-body" style="background-color: #A2AEBB;">
+                <!-- Campos de Entrada -->
+                <div class="mb-3">
+                    <label class="form-label" for="marca" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Marca</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-car-front"></i>
+                        </span>
+                        <InputText id="marca" @bind-Value="vehiculoEditado.Marca" class="form-control" style="border: 1px solid #3F88C5;" />
+                    </div>
+                    <ValidationMessage For="(() => vehiculoEditado.Marca)" />
+                </div>
+
+                <!-- Modelo -->
+                <div class="mb-3">
+                    <label class="form-label" for="modelo" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Modelo</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-cpu"></i>
+                        </span>
+                        <InputText id="modelo" @bind-Value="vehiculoEditado.Modelo" class="form-control" style="border: 1px solid #3F88C5;" />
+                    </div>
+                    <ValidationMessage For="(() => vehiculoEditado.Modelo)" />
+                </div>
+
+                <!-- Año -->
+                <div class="mb-3">
+                    <label class="form-label" for="anio" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Año</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-calendar"></i>
+                        </span>
+                        <InputNumber id="anio" @bind-Value="vehiculoEditado.Año" class="form-control" style="border: 1px solid #3F88C5;" />
+                    </div>
+                    <ValidationMessage For="(() => vehiculoEditado.Año)" />
+                </div>
+
+                <!-- Precio Por Día -->
+                <div class="mb-3">
+                    <label class="form-label" for="precioPorDia" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Precio por Día</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-cash-stack"></i>
+                        </span>
+                        <InputNumber id="precioPorDia" @bind-Value="vehiculoEditado.PrecioPorDia" class="form-control" style="border: 1px solid #3F88C5;" />
+                    </div>
+                    <ValidationMessage For="(() => vehiculoEditado.PrecioPorDia)" />
+                </div>
+
+                <!-- Imagen -->
+                <div class="mb-3">
+                    <label class="form-label" for="imagen" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Imagen(es) (URL)</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-image"></i>
+                        </span>
+                        <InputText id="imagen" @bind-Value="vehiculoEditado.Imagen" class="form-control" style="border: 1px solid #3F88C5;" placeholder="Ingrese la URL de la imagen" />
+                    </div>
+                    <ValidationMessage For="(() => vehiculoEditado.Imagen)" />
+                </div>
+
+                <!-- Combustible -->
+                <div class="mb-3">
+                    <label class="form-label" for="combustible" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Combustible</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-fuel-pump"></i>
+                        </span>
+                        <InputSelect id="combustible" @bind-Value="vehiculoEditado.Combustible" class="form-control" style="border: 1px solid #3F88C5;">
+                            <option value="" disabled selected>Selecciona el tipo de combustible</option>
+                            <option value="Gas">Gas</option>
+                            <option value="Gasoil">Gasoil</option>
+                            <option value="Gasolina">Gasolina</option>
+                        </InputSelect>
+                    </div>
+                    <ValidationMessage For="(() => vehiculoEditado.Combustible)" />
+                </div>
+
+                <!-- Tipo de Transmisión -->
+                <div class="mb-3">
+                    <label class="form-label" for="transmision" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Tipo de Transmisión</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-gear"></i>
+                        </span>
+                        <InputSelect id="transmision" @bind-Value="vehiculoEditado.TipoTransmision" class="form-control" style="border: 1px solid #3F88C5;">
+                            <option value="" disabled selected>Selecciona el tipo de transmisión</option>
+                            <option value="Manual">Manual</option>
+                            <option value="Automatica">Automatica</option>
+                        </InputSelect>
+                    </div>
+                    <ValidationMessage For="(() => vehiculoEditado.TipoTransmision)" />
+                </div>
+
+                <!-- Color -->
+                <div class="mb-3">
+                    <label class="form-label" for="color" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Color</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-palette"></i>
+                        </span>
+                        <InputText id="color" @bind-Value="vehiculoEditado.Color" class="form-control" style="border: 1px solid #3F88C5;" />
+                    </div>
+                    <ValidationMessage For="(() => vehiculoEditado.Color)" />
+                </div>
+
+                <!-- Disponibilidad del Vehículo -->
+                <div class="mb-3">
+                    <label class="form-label" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
+                        <strong>Disponibilidad</strong>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background-color: #FFBA08; color: white;">
+                            <i class="bi bi-check-circle"></i>
+                        </span>
+                        <button type="button" class="btn" @onclick="CambiarDisponibilidad" style="background-color: #FFBA08; color: white;">
+                            @if (vehiculoEditado.Disponible)
+                            {
+                                <span>Marcar como No Disponible</span>
+                            }
+                            else
+                            {
+                                <span>Marcar como Disponible</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-3 text-center d-flex justify-content-center gap-4">
+                    <!-- Botón Guardar -->
+                    <button type="submit" class="btn" style="background-color: #3F88C5; color: white; width: 150px; font-size: 18px;">
+                        Guardar
+                    </button>
+
+                    <!-- Botón Volver -->
+                    <button type="button" class="btn" @onclick="Volver" style="background-color: #F0A500; color: white; width: 150px; font-size: 18px;">
+                        Volver
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    private Vehiculo vehiculoEditado = new Vehiculo();
+
+    protected override async Task OnInitializedAsync()
+    {
+        vehiculoEditado = await VehiculosService.ObtenerPorId(id);
+    }
+
+    private async Task GuardarVehiculo()
+    {
+        await VehiculosService.EditarVehiculo(vehiculoEditado);
+        NavigationManager.NavigateTo("/Admin/vehiculos");
+    }
+
+    private void Volver()
+    {
+        NavigationManager.NavigateTo("/Admin/vehiculos");
+    }
+
+    private void CambiarDisponibilidad()
+    {
+        vehiculoEditado.Disponible = !vehiculoEditado.Disponible;
+    }
+}
