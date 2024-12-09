@@ -4,7 +4,7 @@
 
 ## Participantes
 
-- ** Marianela Veras Ventura**
+- **Marianela Veras Ventura**
   
 - **Andy Vladimir Javier Familia**
 
