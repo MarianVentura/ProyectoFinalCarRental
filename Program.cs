@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoFinalCarRental.Components;
 using ProyectoFinalCarRental.Components.Account;
 using ProyectoFinalCarRental.Data;
+using ProyectoFinalCarRental.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,16 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+//Servicios
+builder.Services.AddScoped<ClienteService>();
+builder.Services.AddScoped<ReservasService>();
+builder.Services.AddScoped<VehiculosService>();
+builder.Services.AddScoped<MantenimientoVehiculoService>(); 
+builder.Services.AddScoped<MetodosPagoService>();
+builder.Services.AddScoped<EstadosReservaService>();
+
+builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 
