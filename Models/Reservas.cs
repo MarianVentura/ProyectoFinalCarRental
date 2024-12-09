@@ -37,4 +37,7 @@ public class Reservas
     public int MetodoPagoId { get; set; }
 
     public MetodosPago? MetodosPago { get; set; }
+
+    public ICollection<ReservaDetalle> ReservaDetalles { get; set; } = new List<ReservaDetalle>();
+
 }
