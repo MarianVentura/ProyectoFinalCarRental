@@ -24,6 +24,12 @@ namespace ProyectoFinalCarRental.Services
         // Insertar un nuevo vehículo
         private async Task<bool> Insertar(Vehiculo vehiculo)
         {
+            // Verificar que la URL de la imagen sea válida antes de agregar
+            if (string.IsNullOrWhiteSpace(vehiculo.Imagen) || !Uri.IsWellFormedUriString(vehiculo.Imagen, UriKind.Absolute))
+            {
+                return false; // La URL no es válida
+            }
+
             await using var contexto = await _dbFactory.CreateDbContextAsync();
             contexto.Vehiculos.Add(vehiculo);
             return await contexto.SaveChangesAsync() > 0;
@@ -32,6 +38,12 @@ namespace ProyectoFinalCarRental.Services
         // Modificar un vehículo existente
         private async Task<bool> Modificar(Vehiculo vehiculo)
         {
+            // Verificar que la URL de la imagen sea válida antes de modificar
+            if (string.IsNullOrWhiteSpace(vehiculo.Imagen) || !Uri.IsWellFormedUriString(vehiculo.Imagen, UriKind.Absolute))
+            {
+                return false; // La URL no es válida
+            }
+
             await using var contexto = await _dbFactory.CreateDbContextAsync();
             contexto.Update(vehiculo);
             return await contexto.SaveChangesAsync() > 0;
