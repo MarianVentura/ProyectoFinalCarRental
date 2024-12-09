@@ -1,0 +1,161 @@
+﻿@page "/reservas/"
+@inject ClienteService ClienteService
+@inject ReservasService ReservasService
+@inject NavigationManager Navigation
+@using ProyectoFinalCarRental.Models
+
+<div class="container mt-4 custom-container">
+    <h2 class="text-center mb-4 text-light">Registrar Reserva</h2>
+    <EditForm Model="@reserva" OnValidSubmit="GuardarReserva" FormName="ReservarVehiculo">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <!-- Formulario de Cliente -->
+        <fieldset class="mb-4">
+            <legend class="text-warning">Información del Cliente</legend>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="identificacion" class="form-label">Identificación:</label>
+                    <InputText id="identificacion" @bind-Value="cliente.Identificacion" class="form-control" />
+                    <button type="button" class="btn btn-secondary mt-2" @onclick="BuscarCliente">Buscar Cliente</button>
+                </div>
+            </div>
+
+            @if (clienteEnEdicion)
+            {
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="nombres" class="form-label">Nombre:</label>
+                        <InputText id="nombres" @bind-Value="cliente.Nombres" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Correo Electrónico:</label>
+                        <InputText id="email" @bind-Value="cliente.Email" class="form-control" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="telefono" class="form-label">Teléfono:</label>
+                        <InputText id="telefono" @bind-Value="cliente.Telefono" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="direccion" class="form-label">Dirección:</label>
+                        <InputText id="direccion" @bind-Value="cliente.Direccion" class="form-control" />
+                    </div>
+                </div>
+            }
+        </fieldset>
+
+        <!-- Formulario de Reserva -->
+        <fieldset>
+            <legend class="text-warning">Información de la Reserva</legend>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="fechaRecogida" class="form-label">Fecha de Recogida:</label>
+                    <InputDate id="fechaRecogida" @bind-Value="reserva.FechaRecogida" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label for="fechaDevolucion" class="form-label">Fecha de Devolución:</label>
+                    <InputDate id="fechaDevolucion" @bind-Value="reserva.FechaDevolucion" class="form-control" />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="vehiculo" class="form-label">Vehículo:</label>
+                    <InputNumber id="vehiculo" @bind-Value="reserva.VehiculoId" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label for="totalPrecio" class="form-label">Precio Total:</label>
+                    <InputNumber id="totalPrecio" @bind-Value="reserva.TotalPrecio" class="form-control" />
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-danger w-50">Guardar Reserva</button>
+        </div>
+    </EditForm>
+</div>
+
+<style>
+    .custom-container {
+        background-color: #1C3144;
+        padding: 20px;
+        border-radius: 10px;
+        color: #A2AEBB;
+    }
+
+    .form-label {
+        color: #FFBA08;
+    }
+
+    .form-select, .form-control {
+        background-color: #A2AEBB;
+        color: #1C3144;
+        border: 1px solid #3F88C5;
+    }
+
+    .btn-danger {
+        background-color: #D00000;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #FFBA08;
+            color: #1C3144;
+        }
+
+    .btn-secondary {
+        background-color: #3F88C5;
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background-color: #FFBA08;
+            color: #1C3144;
+        }
+</style>
+
+@code {
+    private Cliente cliente = new Cliente();
+    private Reservas reserva = new Reservas();
+    private bool clienteEnEdicion = true;
+
+    private async Task BuscarCliente()
+    {
+        var clienteExistente = await ClienteService.BuscarPorIdentificacion(cliente.Identificacion);
+        if (clienteExistente != null)
+        {
+            cliente = clienteExistente;
+            clienteEnEdicion = false;
+        }
+        else
+        {
+            clienteEnEdicion = true;
+        }
+    }
+
+    private async Task GuardarReserva()
+    {
+        if (clienteEnEdicion)
+        {
+            if (!await ClienteService.Guardar(cliente))
+            {
+                return; // Manejar error
+            }
+        }
+
+        reserva.ClienteId = cliente.ClienteId;
+
+        if (await ReservasService.GuardarReserva(reserva))
+        {
+            Navigation.NavigateTo("/reservas");
+        }
+        else
+        {
+            // Manejar error
+        }
+    }
+}

@@ -38,18 +38,8 @@ else
                                 <strong>Precio por Día:</strong> @vehiculo.PrecioPorDia:C
                             </p>
 
-                            <!-- Estado de disponibilidad y botones -->
-                            @if (vehiculo.Disponible)
-                            {
-                                <button class="btn btn-primary" @onclick="() => RentarVehiculo(vehiculo)">Rentar Ahora</button>
-                            }
-                            else
-                            {
-                                <button class="btn btn-secondary" disabled>No Disponible</button>
-                            }
-
                             <!-- Botón de detalles -->
-                            <button class="btn btn-info mt-2" @onclick="() => VerDetalles(vehiculo)">Ver Detalles</button>
+                            <a href="/reservas/" class="btn detalles-btn" @onclick="() => VerDetalles(vehiculo)">Ver Detalles</a>
                         </div>
                     </div>
                 </div>
@@ -73,17 +63,31 @@ else
         vehiculos = await VehiculosService.ObtenerVehiculos();
     }
 
-    // Método de acción para rentar un vehículo
-    private void RentarVehiculo(Vehiculo vehiculo)
-    {
-        // Navega a la página de reserva para el vehículo seleccionado
-        Navigation.NavigateTo($"/reserva/{vehiculo.VehiculoId}");
-    }
-
-    // Método de acción para ver detalles del vehículo
     private void VerDetalles(Vehiculo vehiculo)
     {
-        // Navega a la página de detalles para el vehículo seleccionado
         Navigation.NavigateTo($"/detalles/{vehiculo.VehiculoId}");
     }
 }
+
+<style>
+    /* Estilos para los botones de Detalles */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+
+    .detalles-btn {
+        background-color: #ffba08; /* Color amarillo de la paleta */
+        color: white;
+    }
+
+        .detalles-btn:hover {
+            background-color: #e68905; /* Sombra más oscura para el hover */
+        }
+</style>
