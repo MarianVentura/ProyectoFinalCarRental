@@ -4,10 +4,8 @@
 @using Microsoft.AspNetCore.Authorization
 
 @rendermode InteractiveServer
-
 @attribute [Authorize(Roles = "admin")]
 
-<PageTitle>Agregar Vehículo</PageTitle>
 
 <EditForm Model="nuevoVehiculo" OnSubmit="GuardarVehiculo" FormName="NuevoVehiculo">
     <DataAnnotationsValidator />
@@ -80,17 +78,16 @@
                 <!-- Imagen -->
                 <div class="mb-3">
                     <label class="form-label" for="imagen" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
-                        <strong>Imagen(es)</strong>
+                        <strong>Imagen(es) (URL)</strong>
                     </label>
                     <div class="input-group">
                         <span class="input-group-text" style="background-color: #FFBA08; color: white;">
                             <i class="bi bi-image"></i>
                         </span>
-                        <InputFile id="imagen" OnChange="HandleImageSelection" multiple class="form-control" />
+                        <InputText id="imagen" @bind-Value="nuevoVehiculo.Imagen" class="form-control" style="border: 1px solid #3F88C5;" placeholder="Ingrese la URL de la imagen" />
                     </div>
                     <ValidationMessage For="(() => nuevoVehiculo.Imagen)" />
                 </div>
-
 
                 <!-- Combustible -->
                 <div class="mb-3">
@@ -111,7 +108,6 @@
                     <ValidationMessage For="(() => nuevoVehiculo.Combustible)" />
                 </div>
 
-
                 <!-- Tipo de Transmisión -->
                 <div class="mb-3">
                     <label class="form-label" for="transmision" style="font-family: 'Poppins', sans-serif; color: #1C3144;">
@@ -124,12 +120,11 @@
                         <InputSelect id="transmision" @bind-Value="nuevoVehiculo.TipoTransmision" class="form-control" style="border: 1px solid #3F88C5;">
                             <option value="" disabled selected>Selecciona el tipo de transmisión</option>
                             <option value="Manual">Manual</option>
-                            <option value="Mecanica">Mecánica</option>
+                            <option value="Automatica">Automatica</option>
                         </InputSelect>
                     </div>
                     <ValidationMessage For="(() => nuevoVehiculo.TipoTransmision)" />
                 </div>
-
 
                 <!-- Color -->
                 <div class="mb-3">
@@ -178,8 +173,6 @@
                         Volver
                     </a>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -191,20 +184,22 @@
 
     private async Task HandleImageSelection(InputFileChangeEventArgs e)
     {
-        // Limpiar la lista de imágenes antes de agregar las nuevas
         imagenesSeleccionadas.Clear();
 
-        // Obtener los archivos seleccionados
         foreach (var file in e.GetMultipleFiles())
         {
-            imagenesSeleccionadas.Add(file);
+            if (file.ContentType.StartsWith("image/"))
+            {
+                imagenesSeleccionadas.Add(file);
+            }
+            else
+            {
+                Console.WriteLine("Solo se permiten archivos de imagen.");
+            }
         }
 
-        // Si es necesario, puedes hacer algo con las imágenes seleccionadas aquí
-        // Por ejemplo, almacenar sus nombres en el objeto del vehículo sin hacer nada con los archivos
         if (imagenesSeleccionadas.Count > 0)
         {
-            // Solo almacenar los nombres de las imágenes
             nuevoVehiculo.Imagen = string.Join(", ", imagenesSeleccionadas.Select(f => f.Name));
         }
     }
@@ -213,12 +208,10 @@
     {
         try
         {
-            // Solo se guarda el vehículo sin procesar imágenes
             var exito = await VehiculosService.Guardar(nuevoVehiculo);
 
             if (exito)
             {
-                // Redirigir a la lista de vehículos
                 NavigationManager.NavigateTo("/Admin/vehiculos");
             }
             else
@@ -239,7 +232,6 @@
 
     private void Volver()
     {
-        // Redirigir a la página de lista de vehículos
         NavigationManager.NavigateTo("/Admin/vehiculos");
     }
 }
