@@ -12,6 +12,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<MetodosPago> MetodosPago { get; set; }
     public DbSet<MantenimientoVehiculo> MantenimientoVehiculos { get; set; }
     public DbSet<EstadosReserva> EstadosReserva { get; set; }
+    public DbSet<ReservaDetalle> ReservaDetalles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,7 +57,18 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             );
 
 
-       
+        modelBuilder.Entity<ReservaDetalle>()
+            .HasOne(rd => rd.Reserva)
+            .WithMany(r => r.ReservaDetalles)
+            .HasForeignKey(rd => rd.ReservaId)
+            .OnDelete(DeleteBehavior.Cascade);  
+
+        modelBuilder.Entity<ReservaDetalle>()
+            .HasOne(rd => rd.MetodoPago)
+            .WithMany()  
+            .HasForeignKey(rd => rd.MetodoPagoId);
+
+
         modelBuilder.Entity<MantenimientoVehiculo>()
             .HasOne(mv => mv.Vehiculo)
             .WithMany()
@@ -74,5 +86,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<Vehiculo>()
             .Property(v => v.PrecioPorDia)
             .HasColumnType("decimal(18,2)");
+
+        modelBuilder.Entity<ReservaDetalle>()
+        .Property(r => r.Monto)
+        .HasColumnType("decimal(18,2)");
     }
 }
