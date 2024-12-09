@@ -1,0 +1,155 @@
+﻿@page "/vehiculo-detalles/{Id:int}"
+@inject VehiculosService VehiculosService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Detalles del Vehículo</PageTitle>
+
+<style>
+    .titulo {
+        font-size: 2.5rem;
+        color: #1C3144;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-header {
+        background-color: #1C3144;
+        color: white;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .card-body {
+        padding: 20px;
+        background-color: #A2AEBB;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .card-img-top {
+        height: 300px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .btn-primary {
+        background-color: #FFBA08;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #D00000;
+    }
+
+    .text-danger {
+        color: #D00000;
+    }
+
+    .text-success {
+        color: #3F88C5;
+    }
+</style>
+
+<div class="container mt-5 pt-5">
+    <h1 class="titulo">Detalles del Vehículo</h1>
+
+    <div class="card shadow-lg">
+        <!-- Header -->
+        <div class="card-header">
+            <h2 class="mb-0">
+                <strong>Detalles del Vehículo</strong>
+            </h2>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+            @if (vehiculo != null)
+            {
+                <div class="row">
+                    <!-- Imagen -->
+                    <div class="col-md-6 text-center">
+                        @if (!string.IsNullOrEmpty(vehiculo.Imagen))
+                        {
+                            <img src="@vehiculo.Imagen" alt="Imagen del vehículo" class="card-img-top" />
+                        }
+                        else
+                        {
+                            <p class="text-muted">No hay imagen disponible</p>
+                        }
+                    </div>
+
+                    <!-- Detalles -->
+                    <div class="col-md-6">
+                        <p><strong>Marca:</strong> @vehiculo.Marca</p>
+                        <p><strong>Modelo:</strong> @vehiculo.Modelo</p>
+                        <p><strong>Año:</strong> @vehiculo.Año</p>
+                        <p><strong>Precio por Día:</strong> @vehiculo.PrecioPorDia.ToString("C")</p>
+                        <p><strong>Combustible:</strong> @vehiculo.Combustible</p>
+                        <p><strong>Transmisión:</strong> @vehiculo.TipoTransmision</p>
+                        <p><strong>Color:</strong> @vehiculo.Color</p>
+                        <p>
+                            <strong>Disponibilidad:</strong>
+                            @if (vehiculo.Disponible)
+                            {
+                                <span class="text-success">Disponible</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger">No Disponible</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p class="text-center text-danger">Cargando información del vehículo...</p>
+            }
+
+            <!-- Botón Volver -->
+            <div class="text-center mt-4">
+                <a href="/Admin/vehiculos" class="btn btn-primary">
+                    Volver
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Vehiculo vehiculo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            vehiculo = await VehiculosService.ObtenerPorId(Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar los detalles del vehículo: {ex.Message}");
+        }
+    }
+
+    private void Volver()
+    {
+        NavigationManager.NavigateTo("/Admin/vehiculos");
+    }
+}
