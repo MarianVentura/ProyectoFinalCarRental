@@ -44,6 +44,7 @@ builder.Services.AddScoped<VehiculosService>();
 builder.Services.AddScoped<MantenimientoVehiculoService>(); 
 builder.Services.AddScoped<MetodosPagoService>();
 builder.Services.AddScoped<EstadosReservaService>();
+builder.Services.AddScoped<ReservasDetalleService>();
 
 builder.Services.AddBlazorBootstrap();
 
