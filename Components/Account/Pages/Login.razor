@@ -12,57 +12,103 @@
 
 <PageTitle>Log in</PageTitle>
 
-<h1>Log in</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <StatusMessage Message="@errorMessage" />
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-                <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <ValidationSummary class="text-danger" role="alert" />
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="email" class="form-label">Email</label>
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+<div class="d-flex justify-content-center align-items-center" style="height: 90vh; font-family: 'Poppins', sans-serif;">
+    <div class="col-md-6">
+        <div class="card shadow-lg" style="background-color: var(--primary-color);">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center mb-4 text-white">Login</h2>
+                <StatusMessage Message="@errorMessage" />
+                <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="text-danger" role="alert" />
+
+                    <div class="form-floating mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: var(--accent-color); color: white;">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            <InputText @bind-Value="Input.Email" class="form-control" style="border: 1px solid gray;" autocomplete="username" aria-required="true" placeholder="Correo electronico" />
+                        </div>
+                        <ValidationMessage For="() => Input.Email" class="text-danger" />
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: var(--accent-color); color: white;">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            <InputText type="password" @bind-Value="Input.Password" class="form-control" style="border: 1px solid gray;" autocomplete="current-password" aria-required="true" placeholder="Contraseña" />
+                        </div>
+                        <ValidationMessage For="() => Input.Password" class="text-danger" />
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input" />
+                        <label class="form-check-label text-white" for="rememberMe">Remember me</label>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn" style="background-color: var(--accent-color); color: white;">
+                            <i class="fa-solid fa-paper-plane"></i> Iniciar Sesion
+                        </button>
+                    </div>
+                </EditForm>
+
+                <div class="text-left mt-3">
+                    <a href="Account/ForgotPassword" class="text-dark">Forgot your password?</a><br />
+                    <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" class="text-dark">Register as a new user</a><br />
+                    <a href="Account/ResendEmailConfirmation" class="text-dark">Resend email confirmation</a>
                 </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">Password</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
-                </div>
-                <div class="checkbox mb-3">
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
-                    </label>
-                </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </EditForm>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    :root {
+        --primary-color: #1c3144; /* Color principal */
+        --secondary-color: #d00000; /* Rojo para alertas o elementos destacados */
+        --accent-color: #ffba08; /* Amarillo para resaltar elementos */
+        --light-gray: #a2aebb; /* Gris claro para fondos o texto secundario */
+        --blue-light: #3f88c5; /* Azul para elementos interactivos o botones */
+    }
+
+    .card {
+        border: none; /* Eliminar los bordes de la tarjeta */
+    }
+
+    .input-group-text {
+        border: 1px solid gray; /* Borde de los iconos */
+        background-color: var(--accent-color); /* Fondo del icono */
+        color: white; /* Color del icono */
+    }
+
+    .form-control {
+        border: 1px solid gray; /* Borde de los campos de entrada */
+    }
+
+    .form-floating .form-control {
+        border-radius: 0.25rem; /* Bordes redondeados */
+    }
+
+    .form-label {
+        color: var(--light-gray); /* Color de las etiquetas */
+    }
+
+    .text-dark {
+        color: var(--blue-light) !important; /* Color de los enlaces */
+    }
+
+    .btn {
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+    }
+
+        .btn:hover {
+            background-color: var(--primary-color); /* Cambiar el fondo del botón al pasar el cursor */
+        }
+</style>
 
 @code {
     private string? errorMessage;
@@ -87,13 +133,27 @@
 
     public async Task LoginUser()
     {
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
         var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo(ReturnUrl);
+
+            var user = await SignInManager.UserManager.FindByEmailAsync(Input.Email);
+            // Redirigir a los usuarios según su correo y rol
+            if (Input.Email == "Admin123@gmail.com")
+            {
+                NavigationManager.NavigateTo("/Index/Admin");
+            }
+            else if (Input.Email == "Client123@gmail.com")
+            {
+                NavigationManager.NavigateTo("/Index/Clientes");
+            }
+            else
+            {
+                // Redirigir a clientes no administradores
+                NavigationManager.NavigateTo("/Index/Clientes");
+            }
+
         }
         else if (result.RequiresTwoFactor)
         {
