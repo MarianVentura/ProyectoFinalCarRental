@@ -48,6 +48,10 @@ namespace ProyectoFinalCarRental.Services
             contexto.Update(vehiculo);
             return await contexto.SaveChangesAsync() > 0;
         }
+        public async Task<bool> EditarVehiculo(Vehiculo vehiculo)
+        {
+            return await Guardar(vehiculo); 
+        }
 
         // Guardar un vehículo (insertar o modificar)
         public async Task<bool> Guardar(Vehiculo vehiculo)
@@ -114,5 +118,11 @@ namespace ProyectoFinalCarRental.Services
                 .AsNoTracking()
                 .ToListAsync();
         }
+
+        public async Task<Vehiculo?> ObtenerPorId(int vehiculoId)
+        {
+            return await Buscar(vehiculoId);
+        }
+
     }
 }

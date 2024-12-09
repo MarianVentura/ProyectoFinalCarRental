@@ -8,11 +8,13 @@ namespace ProyectoFinalCarRental.Services
     public class ReservasService
     {
         private readonly IDbContextFactory<ApplicationDbContext> _dbFactory;
-
-        public ReservasService(IDbContextFactory<ApplicationDbContext> dbFactory)
+        private readonly ReservasDetalleService _reservasDetalleService;
+        public ReservasService(IDbContextFactory<ApplicationDbContext> dbFactory, ReservasDetalleService reservasDetalleService)
         {
             _dbFactory = dbFactory;
+            _reservasDetalleService = reservasDetalleService;
         }
+
 
         private async Task<bool> ExisteReserva(int reservaId)
         {
@@ -42,9 +44,23 @@ namespace ProyectoFinalCarRental.Services
             }
             else
             {
-                return await InsertarReserva(reserva);
+                var result = await InsertarReserva(reserva);
+
+                if (reserva.MetodosPago != null)
+                {
+                    var reservaDetalle = new ReservaDetalle
+                    {
+                        ReservaId = reserva.ReservaId,
+                        MetodoPagoId = reserva.MetodosPago.MetodoPagoId,  
+                                                                          
+                    };
+                    await _reservasDetalleService.GuardarReservaDetalle(reservaDetalle);
+                }
+
+                return result;
             }
         }
+
 
         public async Task<bool> EliminarReserva(int reservaId)
         {
@@ -52,8 +68,16 @@ namespace ProyectoFinalCarRental.Services
             var reserva = await contexto.Reservas
                 .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.ReservaId == reservaId);
+
             if (reserva == null)
                 return false;
+
+            // Eliminar los detalles de la reserva asociados
+            var detallesReserva = await _reservasDetalleService.ObtenerReservaDetallesPorReserva(reservaId);
+            foreach (var detalle in detallesReserva)
+            {
+                await _reservasDetalleService.EliminarReservaDetalle(detalle.ReservaDetalleId);
+            }
 
             contexto.Reservas.Remove(reserva);
             return await contexto.SaveChangesAsync() > 0;
