@@ -103,7 +103,11 @@
 
 </style>
 
-<div class="container mt-5">
+<div class="container mt-5 position-relative">
+    <a href="/Index/Admin" class="btn btn-secondary position-absolute top-0 start-0">
+        <i class="bi bi-arrow-left-circle"></i>
+    </a>
+
     <h1 class="titulo">Gestión de Vehículos</h1>
 
     <div class="row justify-content-between mb-4">
@@ -143,15 +147,15 @@
                     </div>
 
                     <div class="card-footer d-flex justify-content-center align-items-center gap-2">
-                        <a href="/Vehiculos/Details/@vehiculo.VehiculoId" class="btn btn-icon btn-primary" title="Ver detalles">
+                        <a href="/vehiculo-detalles/@vehiculo.VehiculoId" class="btn btn-icon btn-primary" title="Ver detalles">
                             <i class="bi bi-info-circle-fill"></i>
                         </a>
-                        <a href="/Vehiculos/Edit/@vehiculo.VehiculoId" class="btn btn-icon btn-warning" title="Editar">
+                        <a href="/editar-vehiculo/@vehiculo.VehiculoId" class="btn btn-icon btn-warning" title="Editar">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
-                        <button class="btn btn-icon btn-danger" @onclick="() => EliminarVehiculo(vehiculo.VehiculoId)" title="Eliminar">
+                        <a href="/eliminar-vehiculo/@vehiculo.VehiculoId" class="btn btn-icon btn-danger" title="Eliminar">
                             <i class="bi bi-trash-fill"></i>
-                        </button>
+                        </a>
                     </div>
 
                 </div>
@@ -189,22 +193,25 @@
         var vehiculo = await VehiculosService.Buscar(vehiculoId);
         if (vehiculo == null)
         {
-            // No se encontró el vehículo
+            
             return;
         }
 
         bool eliminado = await VehiculosService.Eliminar(vehiculo);
         if (eliminado)
         {
-            // El vehículo se eliminó correctamente
             vehiculos.RemoveAll(v => v.VehiculoId == vehiculoId);
             AplicarFiltro();
-            StateHasChanged(); // Actualiza la vista
+            StateHasChanged(); 
         }
         else
         {
-            // Error al eliminar el vehículo
-            StateHasChanged(); // Actualiza la vista (si se desea agregar lógica visual aquí)
+            StateHasChanged(); 
         }
+    }
+
+    private void Volver()
+    {
+        NavigationManager.NavigateTo("/Index/Admin");
     }
 }
