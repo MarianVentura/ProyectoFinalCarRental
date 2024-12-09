@@ -56,11 +56,23 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             );
 
 
-        // Relación MantenimientoVehiculo -> Vehiculo
+       
         modelBuilder.Entity<MantenimientoVehiculo>()
             .HasOne(mv => mv.Vehiculo)
             .WithMany()
             .HasForeignKey(mv => mv.VehiculoId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<MantenimientoVehiculo>()
+            .Property(m => m.Costo)
+            .HasColumnType("decimal(18,2)");  
+
+        modelBuilder.Entity<Reservas>()
+            .Property(r => r.TotalPrecio)
+            .HasColumnType("decimal(18,2)");  
+
+        modelBuilder.Entity<Vehiculo>()
+            .Property(v => v.PrecioPorDia)
+            .HasColumnType("decimal(18,2)");
     }
 }
