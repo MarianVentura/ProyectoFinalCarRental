@@ -1,23 +1,127 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+<!-- Mostrar el navbar con imagen de fondo solo si no estamos en la página de inicio -->
+@if (!IsHomePage)
+{
+    <div id="navbar-container">
+        <div class="navbar navbar-expand-lg fixed-top custom-navbar" id="NavigationBar">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/" style="font-family: 'Poppins', sans-serif;">
+                    <i class="bi bi-car-front"></i> CarRental
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                                <i class="bi bi-house-door"></i> Inicio
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="https://wa.me/180958423" Match="NavLinkMatch.All">
+                                <i class="bi bi-whatsapp"></i> Contactos
+                            </NavLink>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
+    </div>
+}
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+<!-- Contenido principal -->
+<main class="flex-grow-1 p-4 @(IsHomePage ? "" : "mt-5 pt-5")">
+    <article class="content">
+        @Body
+    </article>
+</main>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+@code {
+    private bool IsHomePage => NavigationManager.Uri.EndsWith("/") || NavigationManager.Uri.EndsWith("/home", StringComparison.OrdinalIgnoreCase);
+}
+
+<style>
+    /* Barra de navegación con imagen de fondo */
+    #navbar-container {
+        background-image: url('https://urlshort.app/G4ZNO6');
+        background-size: cover;
+        background-position: center center;
+        background-attachment: fixed;
+        height: 450px;
+        padding-top: 80px;
+    }
+
+    /* Estilos para la navbar */
+    .custom-navbar {
+        background-color: rgba(0, 0, 0, 0.5); /* Transparencia */
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #ffba08;
+    }
+
+    .nav-link {
+        transition: color 0.3s ease;
+        font-size: 1.2rem;
+        color: #ffffff;
+        font-weight: 500;
+    }
+
+        .nav-link:hover {
+            color: #ffffff;
+            background-color: #ffba08;
+            border-radius: 5px;
+        }
+
+    .navbar-toggler-icon {
+        background-color: #ffffff;
+    }
+
+    /* Fondo principal */
+    main {
+        background-color: #ffffff;
+        color: #1c3144;
+    }
+
+    /* Estilo para la fila superior */
+    .top-row {
+        background-color: #ffba08;
+        color: #1c3144;
+    }
+
+    .top-rower {
+        padding: 20px;
+    }
+
+    .mt-5 {
+        margin-top: 5rem;
+    }
+
+    /* Iconos */
+    .bi {
+        margin-right: 8px;
+        font-size: 1.4rem;
+    }
+</style>
+
+<script>
+    // Espera a que el DOM esté completamente cargado antes de ejecutar el código
+    document.addEventListener('DOMContentLoaded', function () {
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.custom-navbar');
+            if (navbar) {  // Verifica que el navbar exista
+                if (window.scrollY > 10) {
+                    navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                } else {
+                    navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                }
+            }
+        });
+    });
+</script>
