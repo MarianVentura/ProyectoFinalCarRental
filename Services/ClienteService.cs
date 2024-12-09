@@ -96,5 +96,23 @@ namespace ProyectoFinalCarRental.Services
             return await contexto.Clientes
                 .AnyAsync(c => c.ClienteId != clienteId && c.Identificacion == identificacion);
         }
+
+        // Obtener todos los clientes
+        public async Task<List<Cliente>> ObtenerClientes()
+        {
+            await using var contexto = await _dbFactory.CreateDbContextAsync();
+            return await contexto.Clientes.AsNoTracking().ToListAsync();
+        }
+
+        // Buscar un cliente por su identificación
+        public async Task<Cliente?> BuscarPorIdentificacion(string identificacion)
+        {
+            await using var contexto = await _dbFactory.CreateDbContextAsync();
+            return await contexto.Clientes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Identificacion == identificacion);
+        }
+
+
     }
 }
