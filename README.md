@@ -28,7 +28,7 @@
    
 ## Link del Proyecto Final
 
-[Texto visible](https://carrentalproject.azurewebsites.net/)
+[DriverChoice](https://carrentalproject.azurewebsites.net/)
  
 ## Roles
    Administrador 
