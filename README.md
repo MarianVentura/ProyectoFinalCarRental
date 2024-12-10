@@ -33,4 +33,4 @@
 
 Cliente
 - **Email:** Client123@gmail.com
-- **Password:** Client123@gmail.com
+- **Password:** Client123@@
