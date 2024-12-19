@@ -71,5 +71,11 @@ namespace ProyectoFinalCarRental.Services
                 .Where(criterio)
                 .ToListAsync();
         }
+
+        public async Task<List<EstadosReserva>> ObtenerEstadosReserva()
+        {
+            await using var contexto = await _dbFactory.CreateDbContextAsync();
+            return await contexto.EstadosReserva.AsNoTracking().ToListAsync();
+        }
     }
 }

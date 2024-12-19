@@ -12,8 +12,8 @@ using ProyectoFinalCarRental.Data;
 namespace ProyectoFinalCarRental.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241209190321_Inicial")]
-    partial class Inicial
+    [Migration("20241209221558_Vehiculo")]
+    partial class Vehiculo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

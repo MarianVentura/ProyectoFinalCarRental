@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProyectoFinalCarRental.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class Vehiculo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

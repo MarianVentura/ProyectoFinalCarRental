@@ -1,0 +1,93 @@
+﻿@page "/contact"
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Formulario de Contacto</PageTitle>
+
+<h2 class="text-center" style="color: #ffba08;">Formulario de Contacto</h2>
+<p class="text-center" style="font-size: 1.2rem; color: #a2aebb;">Por favor, completa los siguientes campos y elige cómo quieres enviar tu consulta.</p>
+
+<div class="container mt-4" style="max-width: 600px; background-color: #ffffff; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border: 2px solid #a2aebb;">
+    <EditForm Model="@contactForm" OnValidSubmit="HandleSubmit">
+        <div class="mb-3">
+            <label for="name" class="form-label" style="color: #1c3144;">Nombre</label>
+            <InputText id="name" class="form-control" @bind-Value="contactForm.Name" required style="border-color: #a2aebb;" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label" style="color: #1c3144;">Correo Electrónico</label>
+            <InputText id="email" type="email" class="form-control" @bind-Value="contactForm.Email" required style="border-color: #a2aebb;" />
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label" style="color: #1c3144;">Mensaje</label>
+            <InputTextArea id="message" class="form-control" rows="5" @bind-Value="contactForm.Message" required style="border-color: #a2aebb;" />
+        </div>
+
+        <div class="mb-3">
+            <label for="sendMethod" class="form-label" style="color: #1c3144;">Método de Envío</label>
+            <select id="sendMethod" class="form-select" @bind="sendMethod" required style="border-color: #a2aebb;">
+                <option value="">Seleccione una opción</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="email">Correo Electrónico</option>
+            </select>
+        </div>
+
+        @if (sendMethod == "whatsapp")
+        {
+            <div class="mb-3">
+                <label for="phone" class="form-label" style="color: #1c3144;">Número de Teléfono</label>
+                <InputText id="phone" type="tel" class="form-control" @bind-Value="contactForm.Phone" required style="border-color: #a2aebb;" />
+            </div>
+        }
+
+        <div class="mb-3 text-center">
+            <button type="submit" class="btn btn-primary btn-lg" style="background-color: #007bff; border-color: #007bff; font-size: 1.1rem;">
+                Enviar
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private ContactForm contactForm = new ContactForm();
+    private string sendMethod = string.Empty;
+
+    private async Task HandleSubmit()
+    {
+        if (sendMethod == "whatsapp")
+        {
+            if (string.IsNullOrWhiteSpace(contactForm.Phone))
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Por favor, ingresa tu número de teléfono para enviar por WhatsApp.");
+                return;
+            }
+            SendToWhatsApp();
+        }
+        else if (sendMethod == "email")
+        {
+            SendByEmail();
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Por favor, selecciona un método de envío.");
+        }
+    }
+
+    private void SendToWhatsApp()
+    {
+        string url = $"https://wa.me/{contactForm.Phone}?text=Hola, soy {contactForm.Name}. Mi consulta es: {contactForm.Message}";
+        JSRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+
+    private void SendByEmail()
+    {
+        string mailto = $"mailto:{contactForm.Email}?subject=Consulta%20de%20{contactForm.Name}&body={Uri.EscapeDataString(contactForm.Message)}";
+        JSRuntime.InvokeVoidAsync("open", mailto, "_blank");
+    }
+
+    private class ContactForm
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+    }
+}
